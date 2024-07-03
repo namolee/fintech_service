@@ -1,0 +1,283 @@
+/* 폰트/화면 크기의 단위
+1. 절대 단위 px:  모니터의 화면을 구성하는 점 1개의 크기
+2. %: 비율 20%
+3. em: 부모 요소의 텍스트 크기에 상대적인 크기 1em, 2em
+        부모요소의 font-size:10px일 때 자식 요소의 font-size:2m이면 
+        자식요소의 크기는 20px가 된다.
+
+4. rem: html 태그의 텍스트 크기에 상대적 크기  
+        html의 기본 폰트 사이즈가 16px일 때 2rem은 32px이 된다
+
+5. vw 뷰포트 너비를 기준으로 상대적인 크기를 갖음
+6. vh 뷰포트 높이를 기준으로 상대적인 크기를 갖음
+*/
+
+.parent {
+    font-size: 10px;
+    color: gray;
+}
+
+.child {
+    font-size: 200%;
+}
+
+.child-to-child {
+    font-size: 2rem;
+}
+
+.parent {
+    font-size: 1vw;
+}
+.child {
+    font-size: 1vh;
+}
+
+/* 색상표기법
+1. 키워드 표기법: black, white, red 등등 150여개
+2. RGB 표기법: Red, Green, Blue 255이면 밝고 0이면 어둡다. rgb(red, green,blue)
+3. RGBA 표기법: RGB에 알파 채널 추가(투명도) rgba(red, green, blue, alpha)
+                alpha가 1이면 불투명, 0이면 투명
+4. HEX표기법: RGB를 16진수로 표현
+                #redgreenblue #00ff00
+*/
+
+.child {
+    color:rgb(10,25,240);
+}
+.child-to-child {
+    color:rgba(10,25,240,0.5);
+}
+.font_size >p {
+    color: #aadd22;
+}
+
+/* 텍스트 속성*/
+/* font-family */
+.font_size >p {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+/* font-size  */
+/* 절대값은 px, %, em은 부모요소에 따라 상대적으로 */
+/* rem은 웹브라우저의 기본 폰트 사이즈를 기준으로 변경 */
+
+.font_size >p {
+    font-size: 0.7rem;
+}
+
+/* font-weight 굵기 
+1. 숫자 표기법 100-900
+2. 키워드 표기법 lighter, normal, bold, bolder
+    ligther, bolder는 부모 요소에 상대적인 값
+    normal = 400
+    bold = 700
+*/
+
+.font_size p:first-child {
+    font-weight: bold;
+}
+
+/* font-style
+normal, italic(기울임체), oblique(기울임),
+*/
+
+.font_size p.italic {
+
+    font-size: 2rem;
+    color: black;
+    font-style: italic;
+}
+
+.font_size p.oblique {
+
+    font-size: 2rem;
+    color: gray;
+    font-style: oblique;
+}
+
+/* text-align */
+/* 글자 위치 정렬 left, center, right, justify */
+
+.font_size :nth-child(2) {
+    text-align: center;
+}
+
+.font_size :nth-child(4) {
+    text-align: justify;
+    color: red;
+}
+
+/* text-decoration 글자에 선긋기 */
+/* line-through: 텍스트 중간에 선긋기
+   over-line: 텍스트 위에 선긋기
+   underline: 텍스트 밑에 선긋기 */
+
+   .font_option :nth-child(2) {
+    text-decoration: line-through;
+   }
+   .font_option :nth-child(3) {
+    text-decoration: overline;
+   }
+   .font_option :nth-child(4) {
+    text-decoration: underline;
+   }
+   .font_option a {
+    text-decoration: none;
+   }
+
+   /* letter-spacing: 문자의 자간 설정 */
+   .font_option :nth-child(5) {
+    letter-spacing: 20px;
+   }
+
+   /* line_height 줄간격
+   normal, 숫자, %, px로 조절 가능
+   */
+
+   .font_option :nth-child(6) {
+    line-height: 10px;
+   }
+   .font_option :nth-child(7) {
+    line-height: 200%;
+   }
+
+
+/* boxmodel */
+
+/* margin 영역 */
+/* 마진은 요소와 요소 사이의 간격 */
+.boxmodel .box1 {
+    border: solid 1px black;
+    margin: 20%;
+}
+.boxmodel .box2 {
+    border: solid 1px black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.boxmodel .box3 {
+    border: solid 1px black;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.boxmodel .box4 {
+    width: 98px;
+    border: solid 1px black;
+    margin: auto;
+    padding: 10;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.boxmodel .box5 {
+    width: 200px;
+    border: solid 1px black;
+    /* margin: top=10 right=11 bottom=0 left=20 */
+    margin: 10px 11px 0px 20px;
+    
+}
+/* border 옵션 주기 */
+.boxmodel2 .box1_1 {
+    
+    border-width: 2px;
+    border-style: dashed;
+    border-color: rgba(255,0,0,0.3);
+}
+.boxmodel2 .box2_1 {
+    
+    border-width: 5px;
+    border-style: dotted;
+    border-color: rgba(255,0,0,0.3);
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box3_1 {
+    
+    border-width: 5px;
+    border-style: double;
+    border-color: black;
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box4_1 {
+    
+    border-width: 5px;
+    border-style: groove;
+    border-color: pink;
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box5_1 {
+    
+    border-width: 5px;
+    border-style: ridge;
+    border-color: pink;
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box6_1 {
+    
+    border-width: 5px;
+    border-style: inset;
+    border-color: pink;
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box7_1 {
+    
+    border-width: 5px;
+    border-style: outset;
+    border-color: pink;
+    margin: 10px 0 10px 0;
+}
+.boxmodel2 .box8_1 {
+    
+    border-width: 5px;
+    border-top-style: double;
+    border-bottom-style: dotted;
+    border-top-color: pink;
+    border-bottom-color: skyblue;
+    border-top-left-radius: 50%;
+    margin: 10px 0 10px 0;
+}
+
+/* padding 영역 */
+.boxmodel2 .box9_1 {
+    
+    padding: 10px;
+    border: 2px black solid;
+}
+
+/* 요소의 배경 속성으로 배경색, 이미지 넣기 */
+/* background-color: 색; */
+
+.boxmodel2 .box9_1 {
+    background-color: gray;
+}
+
+.boxmodel2 .box9_1 {
+    background-image: url('images.img');
+}
+
+/* background-size
+auto: 이미지 크기 유지
+cover: 가로세로 비율 유지, 크기를 확대해 꽉 채움
+contain: 비율 유지 이미지가 배경 요소에 들어가도록 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
