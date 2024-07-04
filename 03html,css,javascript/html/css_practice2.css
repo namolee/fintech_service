@@ -228,20 +228,31 @@ normal, italic(기울임체), oblique(기울임),
 }
 .boxmodel2 .box8_1 {
     
-    border-width: 5px;
-    border-top-style: double;
+    height: 200px;
+    border-color: red;
+    border-width: 10px;
+    border-top-style: dashed;
     border-bottom-style: dotted;
-    border-top-color: pink;
-    border-bottom-color: skyblue;
+    border-left-style: double;
+    border-right-style:ridge;
+    border-top-color: blue;
+    border-bottom-color: yellow;
     border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
     margin: 10px 0 10px 0;
 }
 
 /* padding 영역 */
 .boxmodel2 .box9_1 {
     
-    padding: 10px;
-    border: 2px black solid;
+    border: 1px solid black;
+    height: 200px;
+    width: 200px;
+    border-width: 10px;
+    border-color: red;
+    border-radius: 100%;
+    margin: 10px 0 10px 0;
+    padding: 20%;
 }
 
 /* 요소의 배경 속성으로 배경색, 이미지 넣기 */
