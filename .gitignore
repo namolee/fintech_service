@@ -7,3 +7,4 @@ dist
 dbenv.py
 *.exe
 *.tsv
+*.keras
