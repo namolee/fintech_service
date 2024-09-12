@@ -8,3 +8,4 @@ dbenv.py
 *.exe
 *.tsv
 *.keras
+*.jpg
