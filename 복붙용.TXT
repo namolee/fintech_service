@@ -1,0 +1,67 @@
+class TrOCRInferencer:
+    def init(self):
+        print("[info] init TrOCR Inferencer")
+        self.processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-handwritten")
+        self.model = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-large-handwritten')
+
+    def inference(self, image):
+        pixel_values = self.processor(images=image, return_tensors='pt').pixel_values
+        generated_ids = self.model.generate(pixel_values)
+        generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+        return generated_text
+
+inferencer = TrOCRInferencer()
+
+def image_to_text(image):
+    image = Image.fromarray(image).convert('RGB')
+    text = inferencer.inference(image)
+    return text
+with gr.Blocks() as app:
+    gr.Markdown("# Handwritten Image OCR")
+
+첫 번째 탭 : 이미지 업로드 방식
+    with gr.Tab("Image upload"):
+        image = gr.Image(label="Handritten image file")
+        output = gr.Textbox(label="Output Box")
+        convert_btn = gr.Button("Convert")
+        convert_btn.click(
+            fn=image_to_text, inputs=image, outputs=output
+        )
+        # 예시 이미지 제공
+        gr.Markdown("## Image Examples")
+        gr.Examples(
+            examples=[
+                os.path.join(os.getcwd(), "examples/Hello.png"),
+                os.path.join(os.getcwd(), "examples/Hello_cursive.png"),
+                os.path.join(os.getcwd(), "examples/Red.png"),
+                os.path.join(os.getcwd(), "examples/sentence.png"),
+                os.path.join(os.getcwd(), "examples/i_love_you.png"),
+                os.path.join(os.getcwd(), "examples/merrychristmas.png"),
+                os.path.join(os.getcwd(), "examples/Rock.png"),
+                os.path.join(os.getcwd(), "examples/Bob.png"),
+                ],
+            inputs=image,
+            outputs=output,
+            fn=image_to_text
+            )
+
+두 번째 탭
+    with gr.Tab("Drawing"):
+        gr.Markdown("# Handwritten Image OCR")
+        sketchpad = gr.Sketchpad(
+            label = "Handwritten Sektchpad",
+            shape=(600, 300),
+            brush_radius=3,
+            invert_colors=False,
+            )
+        output = gr.Textbox(label="Output Box")
+        convert_btn = gr.Button("Convert")
+        convert_btn.click(
+            fn=image_to_text, inputs=sketchpad, outputs=output
+            )
+app.launch(inline=False, share=True)
+﻿
+막내
+seominseo_
+ 
