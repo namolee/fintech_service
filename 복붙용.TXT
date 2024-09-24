@@ -1,67 +1,115 @@
-class TrOCRInferencer:
-    def init(self):
-        print("[info] init TrOCR Inferencer")
-        self.processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-handwritten")
-        self.model = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-large-handwritten')
+import gradio as gr
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+import torch_directml  # Import torch-directml for DirectML device
+import torch  # Import PyTorch
 
-    def inference(self, image):
-        pixel_values = self.processor(images=image, return_tensors='pt').pixel_values
-        generated_ids = self.model.generate(pixel_values)
-        generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+Initialize the DirectML device
+dml_device = torch_directml.device()
 
-        return generated_text
+Initialize the model and tokenizer
+model = M2M100ForConditionalGeneration.from_pretrained("facebook/m2m100_418M").to(dml_device)
+tokenizer = M2M100Tokenizer.from_pretrained("facebook/m2m100_418M")
 
-inferencer = TrOCRInferencer()
+List of available languages with their language codes
+languages = {
+    "Korean": "ko",
+    "English": "en",
+    "French": "fr",
+    "Spanish": "es",
+    "German": "de",
+    "Japanese": "ja",
+    "Chinese (Simplified)": "zh",
+    "Russian": "ru",
+    # Add more languages as needed
+}
 
-def image_to_text(image):
-    image = Image.fromarray(image).convert('RGB')
-    text = inferencer.inference(image)
-    return text
+def translate(text, source_lang, target_lang):
+    tokenizer.src_lang = languages[source_lang]
+    encoded_text = tokenizer(text, return_tensors="pt").to(dml_device)  # Send input tensors to DirectML device
+    generated_tokens = model.generate(**encoded_text, forced_bos_token_id=tokenizer.get_lang_id(languages[target_lang]))
+    translated_text = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
+    return translated_text
+
 with gr.Blocks() as app:
-    gr.Markdown("# Handwritten Image OCR")
+    gr.Markdown("# Multilingual Translation Service")
 
-첫 번째 탭 : 이미지 업로드 방식
-    with gr.Tab("Image upload"):
-        image = gr.Image(label="Handritten image file")
-        output = gr.Textbox(label="Output Box")
-        convert_btn = gr.Button("Convert")
-        convert_btn.click(
-            fn=image_to_text, inputs=image, outputs=output
-        )
-        # 예시 이미지 제공
-        gr.Markdown("## Image Examples")
-        gr.Examples(
-            examples=[
-                os.path.join(os.getcwd(), "examples/Hello.png"),
-                os.path.join(os.getcwd(), "examples/Hello_cursive.png"),
-                os.path.join(os.getcwd(), "examples/Red.png"),
-                os.path.join(os.getcwd(), "examples/sentence.png"),
-                os.path.join(os.getcwd(), "examples/i_love_you.png"),
-                os.path.join(os.getcwd(), "examples/merrychristmas.png"),
-                os.path.join(os.getcwd(), "examples/Rock.png"),
-                os.path.join(os.getcwd(), "examples/Bob.png"),
-                ],
-            inputs=image,
-            outputs=output,
-            fn=image_to_text
-            )
+    with gr.Row():
+        source_lang = gr.Dropdown(label="Source Language", choices=list(languages.keys()), value="Korean")
+        target_lang = gr.Dropdown(label="Target Language", choices=list(languages.keys()), value="English")
 
-두 번째 탭
-    with gr.Tab("Drawing"):
-        gr.Markdown("# Handwritten Image OCR")
-        sketchpad = gr.Sketchpad(
-            label = "Handwritten Sektchpad",
-            shape=(600, 300),
-            brush_radius=3,
-            invert_colors=False,
-            )
-        output = gr.Textbox(label="Output Box")
-        convert_btn = gr.Button("Convert")
-        convert_btn.click(
-            fn=image_to_text, inputs=sketchpad, outputs=output
-            )
+    input_text = gr.Textbox(label="Input Text")
+    output_text = gr.Textbox(label="Translated Text")
+    translate_btn = gr.Button("Translate")
+
+    translate_btn.click(fn=translate, inputs=[input_text, source_lang, target_lang], outputs=output_text)
+
 app.launch(inline=False, share=True)
-﻿
-막내
-seominseo_
- 
+
+
+
+
+
+
+import gradio as gr
+from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+import torch_directml  # Import torch-directml for DirectML device
+import torch  # Import PyTorch
+from gtts import gTTS
+import os
+import base64
+
+# Initialize the DirectML device
+dml_device = torch_directml.device()
+
+# Initialize the model and tokenizer
+model = M2M100ForConditionalGeneration.from_pretrained("facebook/m2m100_418M").to(dml_device)
+tokenizer = M2M100Tokenizer.from_pretrained("facebook/m2m100_418M")
+
+# List of available languages with their language codes
+languages = {
+    "Korean": "ko",
+    "English": "en",
+    "French": "fr",
+    "Spanish": "es",
+    "German": "de",
+    "Japanese": "ja",
+    "Chinese (Simplified)": "zh",
+    "Russian": "ru",
+    # Add more languages as needed
+}
+
+# Function to handle translation
+def translate(text, source_lang, target_lang):
+    tokenizer.src_lang = languages[source_lang]
+    encoded_text = tokenizer(text, return_tensors="pt").to(dml_device)  # Send input tensors to DirectML device
+    generated_tokens = model.generate(**encoded_text, forced_bos_token_id=tokenizer.get_lang_id(languages[target_lang]))
+    translated_text = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
+    
+    # Generate pronunciation audio using gTTS
+    tts = gTTS(translated_text, lang=languages[target_lang])
+    tts.save("translated_speech.mp3")
+    
+    # Convert the audio file to base64 to send it to the frontend
+    with open("translated_speech.mp3", "rb") as audio_file:
+        audio_base64 = base64.b64encode(audio_file.read()).decode("utf-8")
+    
+    # Return both the translated text and the audio
+    audio_html = f'<audio controls><source src="data:audio/mp3;base64,{audio_base64}" type="audio/mpeg"></audio>'
+    return translated_text, audio_html
+
+# Gradio UI
+with gr.Blocks() as app:
+    gr.Markdown("# Multilingual Translation Service with Pronunciation")
+
+    with gr.Row():
+        source_lang = gr.Dropdown(label="Source Language", choices=list(languages.keys()), value="Korean")
+        target_lang = gr.Dropdown(label="Target Language", choices=list(languages.keys()), value="English")
+
+    input_text = gr.Textbox(label="Input Text")
+    output_text = gr.Textbox(label="Translated Text")
+    output_audio = gr.HTML()  # Placeholder for the audio pronunciation
+    translate_btn = gr.Button("Translate")
+
+    translate_btn.click(fn=translate, inputs=[input_text, source_lang, target_lang], outputs=[output_text, output_audio])
+
+app.launch(inline=False, share=True)
