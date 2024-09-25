@@ -1,0 +1,4 @@
+GOOGLE_API_KEY = "AIzaSyDTxKdVA6Yn92P3aN_J8XSjzw8DvGJp4CU"
+
+client_id = "8SwGRoTckfd421XzIGMI"  #naver api 접속 id
+client_secret = "HwcuqwZumq"         #naver api 접속 pw
