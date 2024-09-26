@@ -9,3 +9,4 @@ dbenv.py
 *.tsv
 *.keras
 *.jpg
+*.csv
