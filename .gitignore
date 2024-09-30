@@ -10,3 +10,4 @@ dbenv.py
 *.keras
 *.jpg
 *.csv
+zipcode_DB/
