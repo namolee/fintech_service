@@ -11,3 +11,6 @@ dbenv.py
 *.jpg
 *.csv
 zipcode_DB/
+*.json
+*.txt
+AutogluonModels/
