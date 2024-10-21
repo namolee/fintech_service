@@ -1,0 +1,8 @@
+docker container run <이미지명>: docker 이미지 다운로드 및 실행
+docker image ls: 다운로드 받은 image 리스트 보기
+docker image ls -a: 다운로드 받은 전체 image 리스트 보기
+docker container ls: 실행중인 docker container 리스트 보기
+docker container ls -al: 실행중/정지된 모든 docker container 리스트 보기
+docker stop <container id>: 실행중인 docker container 정지시키기
+docker container rm <container id>: docker container 삭제 (먼저 정지 시키고 삭제해야 함)
+docker image rm <image_name>: dockedor image 삭제
