@@ -15,3 +15,6 @@ zipcode_DB/
 *.txt
 AutogluonModels/
 *.xlsx
+KLUE-RoBERTa/
+KcELECTRA-base2/
+KcELECTRA-base/

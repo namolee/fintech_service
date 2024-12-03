@@ -1,43 +1,47 @@
-from flask import Flask, request, jsonify
-import mysql.connector
-from flask_cors import CORS
-import json
+from flask import Flask, jsonify
+import pymysql
+from dbenv import id, pw, host, database  # MySQL 연결 정보
 
 app = Flask(__name__)
-CORS(app)  # CORS 허용 설정
 
-# MySQL 연결 설정
-db = mysql.connector.connect(
-    host="127.0.0.1",     # MySQL 호스트
-    user="root",          # MySQL 사용자 이름
-    password="1234",      # MySQL 비밀번호
-    database="review_db",  # 데이터베이스 이름
-    charset="utf8mb4"  # UTF-8 문자셋 지정
-)
+# MySQL 연결 정보
+db_config = {
+    "host": host.split(":")[0],
+    "port": int(host.split(":")[1]) if ":" in host else 3306,
+    "user": id,
+    "password": pw,
+    "database": database
+}
 
-# 특정 테이블의 모든 리뷰 가져오기
-@app.route('/reviews', methods=['GET'])
-def get_reviews():
-    source = request.args.get('source')
-    if not source:
-        return jsonify({"error": "source parameter is required"}), 400
-
-    table_name = f"{source}_reviews"
-    cursor = db.cursor(dictionary=True)
+# 가게 정보 가져오기
+@app.route('/api/stores', methods=['GET'])
+def get_stores():
+    connection = pymysql.connect(**db_config)
     try:
-        query = f"SELECT review AS Review, date AS Review_Date FROM {table_name}"
-        cursor.execute(query)
-        results = cursor.fetchall()
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            query = "SELECT store_id, store_name, address, kakao_rating, google_rating, naver_rating FROM stores"
+            cursor.execute(query)
+            stores = cursor.fetchall()
+        return jsonify(stores)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        connection.close()
 
-        # JSON 응답 설정
-        return app.response_class(
-            response=json.dumps(results, ensure_ascii=False),  # ensure_ascii=False로 설정
-            status=200,
-            mimetype='application/json'
-        )
-    except mysql.connector.Error as err:
-        return jsonify({"error": str(err)}), 500
+# 특정 가게의 리뷰 가져오기
+@app.route('/api/reviews/<int:store_id>', methods=['GET'])
+def get_reviews(store_id):
+    connection = pymysql.connect(**db_config)
+    try:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            query = "SELECT review_date, review_text, platform FROM reviews WHERE store_id = %s"
+            cursor.execute(query, (store_id,))
+            reviews = cursor.fetchall()
+        return jsonify(reviews)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    finally:
+        connection.close()
 
-# 서버 실행
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
