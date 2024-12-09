@@ -10,6 +10,113 @@
             margin: 20px;
             padding: 20px;
         }
+        .store-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .store-info img {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        .store-info h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .store-info p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .store-details {
+            margin-top: 10px;
+        }
+        .rating {
+            margin-top: 10px;
+            font-size: 14px;
+            display: flex;
+            gap: 20px; /* 별점 간 간격 */
+        }
+        .rating span {
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+        }
+        .rating .naver {
+            background-color: #e6f4e6;
+            color: #333;
+        }
+        .rating .kakao {
+            background-color: #fff7cc;
+            color: #333;
+        }
+        .rating .google {
+            background-color: #d2e3fc;
+            color: #333;
+        }
+        .rating .rating-label {
+            margin-right: 8px; /* 네이버와 ":" 사이의 공백 */
+        }
+        .store-info img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .store-details p {
+            margin: 0;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .details-label {
+            display: inline-block;
+            min-width: 80px; /* 레이블 칸의 고정폭 */
+            font-weight: bold;
+            margin-right: 5px; /* 레이블과 값 사이의 간격 */
+        }
+        
+        .details-value {
+            margin-left: 0px; /* 레이블과 값 사이의 간격 */
+        }
+        .tab-menu {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tab-menu button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+        }
+        .tab-menu button.active {
+            background: #dcd6f7;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .search-section {
+            margin-bottom: 20px;
+        }
+        .review-section {
+            margin-top: 20px;
+        }
         .review {
             padding: 10px;
             border-bottom: 1px solid #ddd;
@@ -25,62 +132,227 @@
             margin-top: 5px;
             font-size: 14px;
         }
-        .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ffae00;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+        .platform {
+            font-weight: bold;
+            color: #333;
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: inline-block;
         }
-        .back-button:hover {
-            background-color: #e09900;
+        .platform.naver {
+            background-color: #e6f4e6;
+        }
+        .platform.kakao {
+            background-color: #fff7cc;
+        }
+        .platform.google {
+            background-color: #d2e3fc;
         }
     </style>
 </head>
 <body>
-    <h1>리뷰 보기</h1>
-    <div id="reviews-container"></div>
-    <a href="/kakao.html" class="back-button">돌아가기</a>
+    <div class="store-info">
+        <div class="store-details-container">
+            <h1 id="store-name">가게 이름</h1>
+            <p id="store-address">가게 주소</p>
+            <div class="store-details">
+                <p id="store-phone"><span class="details-label">전화번호 :</span><span id="phone-value">-</span></p>
+                <p id="store-hours"><span class="details-label">영업시간 :</span><span id="hours-value">-</span></p>
+                <p id="store-price"><span class="details-label">가격대 :</span><span id="price-value">-</span></p>
+            </div>
+            <div class="rating">
+                <span class="naver">🟢&nbsp; : <span id="naver-rating">-</span></span>
+                <span class="kakao">🟡&nbsp; : <span id="kakao-rating">-</span></span>
+                <span class="google">⚪&nbsp; : <span id="google-rating">-</span></span>
+            </div>
+        </div>
+        <img id="store-image" src="https://via.placeholder.com/150" alt="가게 이미지" style="width: 300px; height: 200px; object-fit: cover; border-radius: 8px;">
+
+    </div>
+    
+
+    <div class="tab-menu">
+        <button id="all-reviews-tab" class="active">3사 전체 리뷰</button>
+        <button id="analysis-report-tab">리뷰 분석 리포트</button>
+    </div>
+
+    <div id="all-reviews-content" class="tab-content active">
+        <div class="filter-section">
+            <label><input type="checkbox" id="naver-checkbox" checked> 네이버</label>
+            <label><input type="checkbox" id="kakao-checkbox" checked> 카카오</label>
+            <label><input type="checkbox" id="google-checkbox" checked> 구글</label>
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="review-search" placeholder="리뷰 검색..." style="width: 100%; padding: 8px; font-size: 14px;">
+        </div>
+
+        <div id="reviews-container" class="review-section"></div>
+    </div>
+
+    <div id="analysis-report-content" class="tab-content">
+        <p>리뷰 분석 리포트가 여기에 표시됩니다.</p>
+    </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const urlParams = new URLSearchParams(window.location.search);
             const store_id = urlParams.get('storeId');
-    
+
             if (!store_id) {
                 document.getElementById('reviews-container').innerHTML = "<p>유효한 Store ID가 필요합니다.</p>";
                 return;
             }
 
-            // /reviews/<store_id> 경로로 fetch 요청 보내기
-            fetch(`http://127.0.0.1:5000/reviews/${store_id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const container = document.getElementById('reviews-container');
-                    if (data.error) {
-                        container.innerHTML = `<p>${data.error}</p>`;
-                    } else if (data.length === 0) {
-                        container.innerHTML = "<p>리뷰가 없습니다.</p>";
-                    } else {
-                        const reviewsHtml = data.map(review => `
-                            <div class="review">
-                                <div class="review-date">${review.review_date}</div>
+            function getFirebaseImageUrl(bucketName, path) {
+                const encodedPath = encodeURIComponent(path);
+                return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedPath}?alt=media`;
+            }
+
+            function renderReviews(reviews) {
+                const container = document.getElementById('reviews-container');
+                if (reviews.length === 0) {
+                    container.innerHTML = "<p>리뷰가 없습니다.</p>";
+                    return;
+                }
+
+                const reviewsHtml = reviews.map(review => {
+                    const platformClass = review.platform === '네이버' ? 'naver' : review.platform === '카카오' ? 'kakao' : 'google';
+                    return `<div class="review">
+                                <div class="review-date">
+                                    <span class="platform ${platformClass}">[${review.platform}]</span> ${review.review_date}
+                                </div>
                                 <div class="review-text">${review.review_text}</div>
-                            </div>
-                        `).join('');
-                        container.innerHTML = reviewsHtml;
+                            </div>`;
+                }).join('');
+
+                container.innerHTML = reviewsHtml;
+            }
+
+            function filterReviews(reviews) {
+                const naverChecked = document.getElementById('naver-checkbox').checked;
+                const kakaoChecked = document.getElementById('kakao-checkbox').checked;
+                const googleChecked = document.getElementById('google-checkbox').checked;
+                const searchKeyword = document.getElementById('review-search').value.toLowerCase();
+
+                const filteredReviews = reviews.filter(review => {
+                    if (review.platform === '네이버' && !naverChecked) return false;
+                    if (review.platform === '카카오' && !kakaoChecked) return false;
+                    if (review.platform === '구글' && !googleChecked) return false;
+                    if (searchKeyword && !review.review_text.toLowerCase().includes(searchKeyword)) return false;
+                    return true;
+                });
+
+                renderReviews(filteredReviews);
+            }
+
+            fetch(`http://127.0.0.1:5000/reviews/${store_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        document.getElementById('reviews-container').innerHTML = `<p>${data.message}</p>`;
+                        return;
                     }
+
+                    // 가게 정보 출력
+                    document.getElementById('store-name').textContent = data.store_name;
+                    document.getElementById('store-address').textContent = data.address;
+                    document.getElementById('phone-value').textContent = data.phone_number || '-';
+                    document.getElementById('hours-value').textContent = data.business_hours || '-';
+                    document.getElementById('price-value').textContent = data.price_range || '-';
+                    document.getElementById('naver-rating').textContent = data.reviews[0]?.naver_rating ?? '-';
+                    document.getElementById('kakao-rating').textContent = data.reviews[0]?.kakao_rating ?? '-';
+                    document.getElementById('google-rating').textContent = data.reviews[0]?.google_rating ?? '-';
+                    document.getElementById('store-image').src = data.menu_photo || "https://via.placeholder.com/150";
+
+                    const reviews = data.reviews;
+                    renderReviews(reviews);
+
+                    // 이벤트 핸들러 등록
+                    document.getElementById('naver-checkbox').addEventListener('change', () => filterReviews(reviews));
+                    document.getElementById('kakao-checkbox').addEventListener('change', () => filterReviews(reviews));
+                    document.getElementById('google-checkbox').addEventListener('change', () => filterReviews(reviews));
+                    document.getElementById('review-search').addEventListener('input', () => filterReviews(reviews));
+
+                    // 분석 리포트 렌더링
+                    const analysisReportContent = document.getElementById('analysis-report-content');
+                    const imagePaths = [
+                        `5_RadarChart/${store_id}_radar_chart.png`,
+                        `1_WordCloud/${store_id}_wordcloud.png`,
+                        `3_Distribution/weighted_rating_vs_price.png`,
+                        `2_NegativeReview_Ratio/${store_id}_리뷰_비율.png`,
+                        `4_Keyword/${store_id}_keyword.png`,
+                    ];
+
+                    const reportContainer = document.createElement('div');
+                    reportContainer.style.display = 'flex'; // Flexbox 사용
+                    reportContainer.style.flexDirection = 'column'; // 세로 정렬
+                    reportContainer.style.alignItems = 'center'; // 가로 가운데 정렬
+                    reportContainer.style.justifyContent = 'center'; // 세로 가운데 정렬
+
+                    // 소제목 추가
+                    const negativeReviewTitle = document.createElement('h3');
+                    negativeReviewTitle.textContent = "리뷰 분석 리포트";
+                    negativeReviewTitle.style.marginBottom = "40px";
+                    negativeReviewTitle.style.fontSize = "25px";
+                    negativeReviewTitle.style.color = "#333"; // 글자 색상 설정
+                    reportContainer.appendChild(negativeReviewTitle);
+
+                    imagePaths.forEach((path, index) => {
+                        const img = document.createElement('img');
+                        img.src = getFirebaseImageUrl("final-project-8f802.firebasestorage.app", path);
+                        img.alt = "분석 이미지";
+                        img.style.width = "50%";
+                        img.style.marginBottom = "15px";
+                        img.onerror = function () {
+                            this.src = "https://via.placeholder.com/150";
+                        };
+                        reportContainer.appendChild(img);
+
+                        // 구분선 추가
+                        if (index < imagePaths.length - 1) { // 마지막 이미지는 제외
+                            const divider = document.createElement('hr');
+                            divider.style.width = "90%";
+                            divider.style.border = "0.5px solid #ccc";
+                            divider.style.margin = "20px 0";
+                            reportContainer.appendChild(divider);
+                        }
+
+
+                        // 부정 리뷰 키워드 이미지를 추가하는 조건
+                        if (index === 3) { // '부정 리뷰 비율' 차트 아래 추가
+                            const negativeReviewTitle = document.createElement('h3');
+                            negativeReviewTitle.textContent = "부정 리뷰 키워드";
+                            negativeReviewTitle.style.marginTop = "30px";
+                            negativeReviewTitle.style.fontSize = "20px";
+                            negativeReviewTitle.style.color = "#333";
+                            reportContainer.appendChild(negativeReviewTitle);
+                        }
+                    });
+
+                    analysisReportContent.innerHTML = "";
+                    analysisReportContent.appendChild(reportContainer);
                 })
                 .catch(error => {
                     document.getElementById('reviews-container').innerHTML = `<p>오류가 발생했습니다: ${error.message}</p>`;
                 });
+
+            // 탭 전환 이벤트
+            document.getElementById('all-reviews-tab').addEventListener('click', function () {
+                document.getElementById('all-reviews-content').classList.add('active');
+                document.getElementById('analysis-report-content').classList.remove('active');
+                this.classList.add('active');
+                document.getElementById('analysis-report-tab').classList.remove('active');
+            });
+
+            document.getElementById('analysis-report-tab').addEventListener('click', function () {
+                document.getElementById('analysis-report-content').classList.add('active');
+                document.getElementById('all-reviews-content').classList.remove('active');
+                this.classList.add('active');
+                document.getElementById('all-reviews-tab').classList.remove('active');
+            });
         });
+
     </script>
 </body>
 </html>
